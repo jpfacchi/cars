@@ -19,12 +19,12 @@ fundo = pygame.image.load("assets/rua.png")
 iconeJogo = pygame.image.load("assets/icon.png")
 pygame.display.set_icon(iconeJogo)
 pygame.display.set_caption('Getaway driver')
-explosao_sound = pygame.mixer.Sound("assets/explosao.wav")
-missile_sound = pygame.mixer.Sound("assets/missile.wav")
+#explosao_sound = pygame.mixer.Sound("assets/")
+
 # Funções Gerais #############s
-def mostraIron(x, y):
+def mostraCar(x, y):
     gamedisplay.blit(car_img, (x, y))
-def mostraMissile(x, y):
+def mostraMini(x, y):
     gamedisplay.blit(mini_img, (x, y))
 def text_objects(text, font):
     textSurface = font.render(text, True, white)
@@ -38,7 +38,7 @@ def message_display(text):
     time.sleep(5)
     game_loop()
 def morteIron():
-    pygame.mixer.Sound.play(explosao_sound)
+    #pygame.mixer.Sound.play(explosao_sound)
     pygame.mixer.music.stop()
     message_display("Você bateu!")
 def escrevePlacar(contador):
@@ -47,20 +47,20 @@ def escrevePlacar(contador):
     gamedisplay.blit(text, (10, 30))
 def game_loop():
     # Looping do Jogo
-    pygame.mixer.music.load("assets/ironsound.mp3")
+    pygame.mixer.music.load("assets/Top_Gear.mp3")
     # parametro -1, é looping infinito
     pygame.mixer.music.play(-1)
     pygame.mixer.music.set_volume(0.1)
-    ironPosicaoX = 330
-    ironPosicaoY = 450
+    car_posicaoX = 330
+    car_posicaoY = 450
     movimentoX = 0
     largura_car = 53
-    altura_iron = 150
+    altura_car = 150
     # random é um sorteio de 0 até 800
     missilePosicaoX = random.randrange(0, larguraTela)
     missilePosicaoY = -600
-    largura_missile = 53
-    altura_missile = 150
+    largura_mini = 53
+    altura_mini = 150
     missile_speed = 7
     contador = 0
     iron_speed = 10
@@ -83,25 +83,25 @@ def game_loop():
 
 
 
-        ironPosicaoX = ironPosicaoX + movimentoX
+        car_posicaoX = car_posicaoX + movimentoX
         gamedisplay.fill(white)
         gamedisplay.blit(fundo, (0, 0))
-        mostraIron(ironPosicaoX, ironPosicaoY)
+        mostraCar(car_posicaoX, car_posicaoY)
         escrevePlacar(contador)
-        if ironPosicaoX > larguraTela - largura_car :
-            ironPosicaoX = larguraTela-largura_car
-        elif ironPosicaoX < 0:
-            ironPosicaoX = 0
-        mostraMissile(missilePosicaoX, missilePosicaoY)
+        if car_posicaoX > larguraTela - largura_car :
+            car_posicaoX = larguraTela-largura_car
+        elif car_posicaoX < 0:
+            car_posicaoX = 0
+        mostraMini(missilePosicaoX, missilePosicaoY)
         missilePosicaoY = missilePosicaoY + missile_speed
         if missilePosicaoY > alturaTela:
-            missilePosicaoY = 0 - altura_missile
+            missilePosicaoY = 0 - altura_mini
             missilePosicaoX = random.randrange(0, larguraTela)
             missile_speed = missile_speed + 1
             contador = contador + 1
-            pygame.mixer.Sound.play(missile_sound)
-        if ironPosicaoY + 50 < missilePosicaoY + altura_missile:
-            if ironPosicaoX < missilePosicaoX and ironPosicaoX + largura_car > missilePosicaoX or missilePosicaoX+largura_missile > ironPosicaoX and missilePosicaoX+largura_missile < ironPosicaoX + largura_car:
+
+        if car_posicaoY + 50 < missilePosicaoY + altura_mini:
+            if car_posicaoX < missilePosicaoX and car_posicaoX + largura_car > missilePosicaoX or missilePosicaoX+largura_mini > car_posicaoX and missilePosicaoX+largura_mini < car_posicaoX + largura_car:
                 morteIron()
         pygame.display.update()
         clock.tick(60)
