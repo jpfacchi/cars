@@ -13,15 +13,42 @@ print(fontes)
 black = (0, 0, 0)
 white = (255, 255, 255)
 gray = (100, 100, 100)
+inicilizacao = pygame.image.load('assets/getawayV7.png')
 car_img = pygame.image.load('assets/car_p.png').convert_alpha()
 mini_img = pygame.image.load('assets/minii.png').convert_alpha()
 fundo = pygame.image.load("assets/rua.png")
 iconeJogo = pygame.image.load("assets/icon.png")
 pygame.display.set_icon(iconeJogo)
 pygame.display.set_caption('Getaway driver')
-#explosao_sound = pygame.mixer.Sound("assets/")
 
-# Funções Gerais #############s
+# Funções Gerais #############
+def user():
+    email = ""
+    font = pygame.font.Font('freesansbold.ttf', 30)
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_BACKSPACE:
+                    email = email[:-1]
+                elif event.key == pygame.K_RETURN:
+                    return email
+                    break
+                else:
+                    email+= event.unicode
+            gamedisplay.fill((26,37,39))
+            gamedisplay.blit(inicilizacao, (0,0))
+            block = font.render(email, True, (0,0,0))
+            rect = block.get_rect()
+            rect.center = gamedisplay.get_rect().center
+            gamedisplay.blit(block, rect)
+            pygame.display.flip() 
+
+
+
 def mostraCar(x, y):
     gamedisplay.blit(car_img, (x, y))
 def mostraMini(x, y):
@@ -37,8 +64,7 @@ def message_display(text):
     pygame.display.update()
     time.sleep(5)
     game_loop()
-def morteIron():
-    #pygame.mixer.Sound.play(explosao_sound)
+def batida_car():
     pygame.mixer.music.stop()
     message_display("Você bateu!")
 def escrevePlacar(contador):
@@ -57,13 +83,29 @@ def game_loop():
     largura_car = 53
     altura_car = 150
     # random é um sorteio de 0 até 800
-    missilePosicaoX = random.randrange(0, larguraTela)
-    missilePosicaoY = -600
+    miniPosicaoX = random.randrange(0, larguraTela)
+    miniPosicaoY = -600
     largura_mini = 53
     altura_mini = 150
-    missile_speed = 7
+    mini_speed = 2
     contador = 0
-    iron_speed = 10
+    car_speed = 10
+
+    if __name__ == "__main__":
+        nome = user()
+        arquivo = open("emails.txt","r")
+        emails = arquivo.readlines()
+        emails.append(nome)
+        emails.append("\n")
+        arquivo = open("emails.txt","w")
+        arquivo.writelines(emails)
+
+        arquivo = open("emails.txt","r")
+        texto = arquivo.readlines()
+        for line in texto:
+            print(line)
+        arquivo.close()
+
     while True:
         # inicio -  event.get() devolve uma lista de eventos que estão acontecendo
         for event in pygame.event.get():
@@ -73,9 +115,9 @@ def game_loop():
                 quit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
-                    movimentoX = iron_speed * -1 
+                    movimentoX = car_speed * -1 
                 elif event.key == pygame.K_RIGHT:
-                    movimentoX = iron_speed
+                    movimentoX = car_speed
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                     movimentoX = 0
@@ -92,17 +134,17 @@ def game_loop():
             car_posicaoX = larguraTela-largura_car
         elif car_posicaoX < 0:
             car_posicaoX = 0
-        mostraMini(missilePosicaoX, missilePosicaoY)
-        missilePosicaoY = missilePosicaoY + missile_speed
-        if missilePosicaoY > alturaTela:
-            missilePosicaoY = 0 - altura_mini
-            missilePosicaoX = random.randrange(0, larguraTela)
-            missile_speed = missile_speed + 1
+        mostraMini(miniPosicaoX, miniPosicaoY)
+        miniPosicaoY = miniPosicaoY + mini_speed
+        if miniPosicaoY > alturaTela:
+            miniPosicaoY = 0 - altura_mini
+            miniPosicaoX = random.randrange(0, larguraTela)
+            mini_speed = mini_speed + 1
             contador = contador + 1
 
-        if car_posicaoY + 50 < missilePosicaoY + altura_mini:
-            if car_posicaoX < missilePosicaoX and car_posicaoX + largura_car > missilePosicaoX or missilePosicaoX+largura_mini > car_posicaoX and missilePosicaoX+largura_mini < car_posicaoX + largura_car:
-                morteIron()
+        if car_posicaoY + 50 < miniPosicaoY + altura_mini:
+            if car_posicaoX < miniPosicaoX and car_posicaoX + largura_car > miniPosicaoX or miniPosicaoX+largura_mini > car_posicaoX and miniPosicaoX+largura_mini < car_posicaoX + largura_car:
+                batida_car()
         pygame.display.update()
         clock.tick(60)
 game_loop()
