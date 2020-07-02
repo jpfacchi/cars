@@ -2,7 +2,7 @@ import pygame
 import time
 import random
 pygame.init()
-# Variáveis Gerais #############s
+# Variáveis Gerais #############
 larguraTela = 335
 alturaTela = 512
 gamedisplay = pygame.display.set_mode((larguraTela, alturaTela))
